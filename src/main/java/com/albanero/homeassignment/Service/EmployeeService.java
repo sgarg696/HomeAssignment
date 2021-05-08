@@ -31,15 +31,15 @@ public class EmployeeService {
         List<String> tableList = entityManager.createNativeQuery(SELECT_QUERY).getResultList();
         if (!CollectionUtils.isEmpty(tableList)) {
             tableList.forEach(e -> {
-                String DESCRIBE_QUERY = DESCRIBE + e;
-                List<Object[]> result = entityManager.createNativeQuery(DESCRIBE_QUERY).getResultList();
+                String describeQuery = DESCRIBE + e;
+                List<Object[]> columnInfos = entityManager.createNativeQuery(describeQuery).getResultList();
                 if (!e.equals(COLUMN_INFO) && !e.equals(TABLE_INFO)) {
                     TableInfo tableInfo = new TableInfo();
                     tableInfo.setTableName(e);
-                    result.forEach(r -> {
+                    columnInfos.forEach(column -> {
                         ColumnInfo columnInfo = new ColumnInfo();
-                        columnInfo.setColumnName((String) r[0]);
-                        columnInfo.setColumnType((String) r[1]);
+                        columnInfo.setColumnName((String) column[0]);
+                        columnInfo.setColumnType((String) column[1]);
                         columnInfo.setTableInfo(tableInfo);
                         tableInfo.getColumnInfoList().add(columnInfo);
                     });
